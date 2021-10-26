@@ -58,6 +58,11 @@ instruction_type interpretate_asm_instruction( const char* input_line )
 void output_machine_code( Code* some_code, const char* filename )
 {
 	FILE* machine_code_file = fopen( filename, "wb" );
+
+	BinaryHeader bin_header;
+	//fclose( machine_code_file );
+	//machine_code_file = fopen( filename, "ab" );
+	fwrite( &bin_header, sizeof( BinaryHeader ), 1, machine_code_file );
 	fwrite( some_code->digit_format, sizeof( int ), some_code->text_format.N_strings, machine_code_file );
 	/*
 	for( int i = 0; i < some_code->text_format.N_strings; i++ )
