@@ -21,5 +21,7 @@ int main()
 */
 
 	output_machine_code( &some_code, "code.txt" );
+
+	free_assembler_memory( &some_code );
 	return 0;
 }

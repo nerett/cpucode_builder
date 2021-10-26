@@ -58,7 +58,8 @@ instruction_type interpretate_asm_instruction( const char* input_line )
 void output_machine_code( Code* some_code, const char* filename )
 {
 	FILE* machine_code_file = fopen( filename, "w" );
-	for( int i; i < some_code->text_format.N_strings; i++ )
+
+	for( int i = 0; i < some_code->text_format.N_strings; i++ )
 	{
 		fprintf( machine_code_file, "%d ", some_code->digit_format[i] );
 	}
@@ -69,5 +70,6 @@ void output_machine_code( Code* some_code, const char* filename )
 
 void free_assembler_memory( Code* some_code )
 {
-
+	free_memory( &some_code->text_format );
+	free( some_code->digit_format );
 }
