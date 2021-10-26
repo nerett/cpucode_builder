@@ -20,7 +20,7 @@ int main()
 	}
 */
 
-	output_machine_code( &some_code, "code.txt" );
+	output_machine_code( &some_code, "cpucode" );
 
 	free_assembler_memory( &some_code );
 	return 0;

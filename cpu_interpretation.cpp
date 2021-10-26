@@ -57,12 +57,14 @@ instruction_type interpretate_asm_instruction( const char* input_line )
 
 void output_machine_code( Code* some_code, const char* filename )
 {
-	FILE* machine_code_file = fopen( filename, "w" );
-
+	FILE* machine_code_file = fopen( filename, "wb" );
+	fwrite( some_code->digit_format, sizeof( int ), some_code->text_format.N_strings, machine_code_file );
+	/*
 	for( int i = 0; i < some_code->text_format.N_strings; i++ )
 	{
 		fprintf( machine_code_file, "%d ", some_code->digit_format[i] );
 	}
+	*/
 	fclose( machine_code_file );
 }
 
