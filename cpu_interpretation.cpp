@@ -27,7 +27,7 @@ void compile_code( Code* some_code )
 
 		if( current_length == 2 )
 		{
-			some_code->digit_format[i+1] = *some_code->text_format.index_string[i+1]; // current_length == + 1
+			sscanf( some_code->text_format.index_string[i+1], "%d", &some_code->digit_format[i+1] );// current_length == + 1
 		}
 
 		i += instruction_lenght[current_instruction];

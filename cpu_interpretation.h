@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "instructions.h"
-#include "../onegin/string-operations.h"
+#include "../string_parsing_operations/string-operations.h"
 
 
 struct Code
