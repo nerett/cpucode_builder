@@ -40,7 +40,7 @@ instruction_type interpretate_asm_instruction( const char* input_line )
 {
 	instruction_type input_instruction = NONE;
 
-	if( !strcmp( input_line, "start" ) ) input_instruction = START;
+	if( !strcmp( input_line, "strt" ) ) input_instruction = STRT;
 	else if( !strcmp( input_line, "push" ) ) input_instruction = PUSH;
 	else if( !strcmp( input_line, "pop" ) ) input_instruction = POP;
 	else if( !strcmp( input_line, "add" ) ) input_instruction = ADD;
