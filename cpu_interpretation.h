@@ -22,6 +22,7 @@ struct Code
 {
 	text text_format = {};
 	int* digit_format = NULL;
+	int N_machine_code_entities = 0; //для неравномерного кода изменить
 };
 
 
@@ -31,6 +32,7 @@ void output_machine_code( Code* some_code, const char* filename );
 
 instruction_type interpretate_asm_instruction( const char* input_line );
 cpucode_descriptional_argument interpretate_param_argument( const char* some_argument );
+asmcode_argument_type determine_asmcode_argument_type( const char* some_text_argument );
 
 void free_assembler_memory( Code* some_code );
 

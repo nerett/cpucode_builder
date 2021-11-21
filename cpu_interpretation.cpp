@@ -6,6 +6,8 @@ void input_asm_code( Code* some_code, const char* filename )
 {
 	assert( some_code );
 
+
+	printf( "Loading assembler code from \"%s\"...\n", filename );
 	input_text( &some_code->text_format, ( char* )filename );
 }
 
@@ -13,7 +15,14 @@ void input_asm_code( Code* some_code, const char* filename )
 /*--------------------------FUNCTION----------------------------------------- */
 void compile_code( Code* some_code )
 {
+	assert( some_code );
+
+
+	printf( "Starting compilation...\n" );
+
 	some_code->digit_format = ( int* )calloc( some_code->text_format.N_strings, sizeof( int ) );
+	printf( "Memory for machine code buffer allocated\n" );
+
 	instruction_type current_instruction = NONE;
 	cpucode_descriptional_argument current_argument = NARG;
 	asmcode_argument_type current_argument_type = NOTYPE;
@@ -23,38 +32,47 @@ void compile_code( Code* some_code )
 	int i = 0;
 	int j = 0;
 	//int k = 0;
+	printf( "Starting commands interpretation...\n" );
 	while( i < some_code->text_format.N_strings  )
 	{
+		printf( "Processing text entity №%d...\n", i );
+
+		current_instruction = NONE; //это вообще-то не нужно, но я на всякий случай решил добавить
+		current_argument = NARG;
+		current_argument_type = NOTYPE;
+		current_text_length = 0;
+
 		current_instruction = interpretate_asm_instruction( ( const char* )some_code->text_format.index_string[i] );
 		current_text_length = instruction_text_lenght[current_instruction];
+		printf( "Interpetated instruction code as %d with text length %d\n", current_instruction, current_text_length );
 
 		some_code->digit_format[j] = current_instruction; //запись кода инструкции
+		j++; //переход далее
 
 		if( current_text_length > 1 ) //интерперетация аргументов
 		{
+			printf( "Processing arguments...\n" );
+
 			current_argument_type = asmcode_argument_mask[current_instruction][1];
 			if( current_argument_type == VARIABLE_ARG ) //определить тип вариативного аргумента
 			{
-				if( is_number( some_code->text_format.index_string[i+1] ) )
-				{
-					current_argument_type = NUMBER;
-				}
-				else
-				{
-					current_argument_type = PARAMETER;
-				}
+				current_argument_type = determine_asmcode_argument_type( some_code->text_format.index_string[i+1] );
 			}
 
 
 			if( current_argument_type == PARAMETER ) //определить параметрический аргумент //записать тип аргумента в машинный код (если числовой, то тип числа; если параметрический то параметр)
 			{
-				some_code->digit_format[j+1] = interpretate_param_argument( some_code->text_format.index_string[i+1] );
+				some_code->digit_format[j] = interpretate_param_argument( some_code->text_format.index_string[i+1] );
+				printf( "Interpetated as PARAMETER argument with code %d\n", some_code->digit_format[j] );
+				j++;
 			}
 			else if( current_argument_type == NUMBER ) //считать числовой аргумент
 			{
-				sscanf( some_code->text_format.index_string[i+2], "%d", &some_code->digit_format[j+2] ); //interpretating operand
+				sscanf( some_code->text_format.index_string[i+1], "%d", &some_code->digit_format[j+1] ); //interpretating operand
 				cpucode_descriptional_argument descriptional_argument_buffer = INT; //!TODO добавить определение дробных чисел
-				some_code->digit_format[j+1] = descriptional_argument_buffer; //!TODO макрос для j+1
+				some_code->digit_format[j] = descriptional_argument_buffer; //!TODO макрос для j+1
+				printf( "Interpetated as NUMBER argument \"%d\"\n", some_code->digit_format[j] ); //! ERROR
+				j += 2;
 			}
 			//!TODO блин, я ж могу всё это реализовать проще с помощью нескольких проходов!!!
 			//!TODO обработка NARG и подобных
@@ -62,8 +80,10 @@ void compile_code( Code* some_code )
 		}
 
 		i += instruction_text_lenght[current_instruction];
-		j += instruction_code_lenght[current_instruction];
+		//j += instruction_code_lenght[current_instruction];
+		//some_code->N_machine_code_entities += instruction_code_lenght[current_instruction];
 	}
+	some_code->N_machine_code_entities = j;
 }
 
 
@@ -72,7 +92,7 @@ instruction_type interpretate_asm_instruction( const char* input_line )
 {
 	instruction_type input_instruction = NONE;
 
-	if( !strcmp( input_line, "strt" ) ) input_instruction = STRT;
+	if( !strcmp( input_line, "strt" ) ) input_instruction = STRT; //сделать таблицы соответствия вместо этого
 	else if( !strcmp( input_line, "push" ) ) input_instruction = PUSH;
 	else if( !strcmp( input_line, "pop" ) ) input_instruction = POP;
 	else if( !strcmp( input_line, "add" ) ) input_instruction = ADD;
@@ -105,13 +125,23 @@ cpucode_descriptional_argument interpretate_param_argument( const char* some_arg
 /*--------------------------FUNCTION----------------------------------------- */
 void output_machine_code( Code* some_code, const char* filename )
 {
+	assert( some_code );
+	assert( filename );
+
+
+	printf( "Opening file...\n" );
 	FILE* machine_code_file = fopen( filename, "wb" );
+	printf( "File opened successfully\n" );
 
 	BinaryHeader bin_header;
 	//fclose( machine_code_file );
 	//machine_code_file = fopen( filename, "ab" );
+	printf( "Writing binary header...\n" );
 	fwrite( &bin_header, sizeof( BinaryHeader ), 1, machine_code_file );
-	fwrite( some_code->digit_format, sizeof( int ), some_code->text_format.N_strings, machine_code_file );
+
+	printf( "Writing machine code from buffer to \"%s\"...\n", filename );
+	fwrite( some_code->digit_format, sizeof( int ), some_code->N_machine_code_entities, machine_code_file ); //исправить размер
+	printf( "Code written successfully\n" );
 	/*
 	for( int i = 0; i < some_code->text_format.N_strings; i++ )
 	{
@@ -134,4 +164,17 @@ void free_assembler_memory( Code* some_code )
 bool is_number( const char* some_string )
 {
 	return strchr( NUMBER_SYMBOLS, some_string[0] );
+}
+
+
+/*--------------------------FUNCTION----------------------------------------- */
+asmcode_argument_type determine_asmcode_argument_type( const char* some_text_argument )
+{
+	if( is_number( some_text_argument ) )
+	{
+		return NUMBER;
+	}
+
+	return PARAMETER;
+	//!TODO проверку каждого символа можно добавить и тут
 }
