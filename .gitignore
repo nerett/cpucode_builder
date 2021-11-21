@@ -2,3 +2,4 @@ Debug/
 code.asm
 code.txt
 cpucode
+compile_run.sh

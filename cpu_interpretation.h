@@ -7,7 +7,8 @@
 #include "instructions.h"
 #include "../string_parsing_operations/string-operations.h"
 
-const int ASSEMBLER_VERSION = 0;
+const int ASSEMBLER_VERSION = 1;
+const char NUMBER_SYMBOLS[] = "0123456789";
 
 struct BinaryHeader
 {
@@ -29,8 +30,11 @@ void compile_code( Code* some_code );
 void output_machine_code( Code* some_code, const char* filename );
 
 instruction_type interpretate_asm_instruction( const char* input_line );
+cpucode_descriptional_argument interpretate_param_argument( const char* some_argument );
 
 void free_assembler_memory( Code* some_code );
+
+bool is_number( const char* some_string );
 
 
 #endif
