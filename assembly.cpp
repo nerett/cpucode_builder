@@ -1,4 +1,6 @@
 #include "cpu_interpretation.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 int main()
 {

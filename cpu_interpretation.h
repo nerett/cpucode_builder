@@ -2,8 +2,6 @@
 #define CPU_INTERPRETATION_H_INCLUDED
 
 
-#include <stdlib.h>
-#include <assert.h>
 #include "instructions.h"
 #include "../string_parsing_operations/string-operations.h"
 

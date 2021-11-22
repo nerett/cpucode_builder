@@ -1,4 +1,7 @@
 #include "cpu_interpretation.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 
 /*--------------------------FUNCTION----------------------------------------- */
@@ -20,7 +23,7 @@ void compile_code( Code* some_code )
 
 	printf( "Starting compilation...\n" );
 
-	some_code->digit_format = ( int* )calloc( some_code->text_format.N_strings, sizeof( int ) );
+	some_code->digit_format = ( int* )calloc( some_code->text_format.N_strings * 3, sizeof( int ) ); //!TODO определять объём буфера
 	printf( "Memory for machine code buffer allocated\n" );
 
 	instruction_type current_instruction = NONE;
@@ -153,7 +156,8 @@ void output_machine_code( Code* some_code, const char* filename )
 	//fclose( machine_code_file );
 	//machine_code_file = fopen( filename, "ab" );
 	printf( "Writing binary header...\n" );
-	fwrite( &bin_header, sizeof( BinaryHeader ), 1, machine_code_file );
+printf("file ptr = %p\n", machine_code_file );
+	fwrite( &bin_header, sizeof( bin_header ), 1, machine_code_file );
 
 	printf( "Writing machine code from buffer to \"%s\"...\n", filename );
 	fwrite( some_code->digit_format, sizeof( int ), some_code->N_machine_code_entities, machine_code_file ); //исправить размер
