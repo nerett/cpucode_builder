@@ -7,7 +7,7 @@
 #include "instructions.h"
 #include "../string_parsing_operations/string-operations.h"
 
-const int ASSEMBLER_VERSION = 1;
+const int ASSEMBLER_VERSION = 2;
 const char NUMBER_SYMBOLS[] = "0123456789";
 
 struct BinaryHeader
