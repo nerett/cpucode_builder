@@ -65,6 +65,12 @@ void compile_code( Code* some_code )
 				some_code->digit_format[j] = interpretate_param_argument( some_code->text_format.index_string[i+1] );
 				printf( "Interpetated as PARAMETER argument with code %d\n", some_code->digit_format[j] );
 				j++;
+
+				if( some_code->digit_format[j-1] == RAM )
+				{
+					sscanf( some_code->text_format.index_string[i+1] + 1, "%d[0-9]", &some_code->digit_format[j] );
+					j++;
+				}
 			}
 			else if( current_argument_type == NUMBER ) //считать числовой аргумент
 			{
@@ -112,11 +118,21 @@ cpucode_descriptional_argument interpretate_param_argument( const char* some_arg
 {
 	cpucode_descriptional_argument input_argument = NARG;
 
-	if( !strcmp( some_argument, "ax" ) ) input_argument = RGAX;
-	else if( !strcmp( some_argument, "bx" ) ) input_argument = RGBX;
-	else if( !strcmp( some_argument, "cx" ) ) input_argument = RGCX;
-	else if( !strcmp( some_argument, "dx" ) ) input_argument = RGDX;
-	else if( !strcmp( some_argument, "ram" ) ) input_argument = RAM;
+	if( some_argument[0] == '[' ) //если обращение к оперативной памяти
+	{
+		if( is_number( &some_argument[1] ) ) input_argument = RAM;
+		else if( some_argument[1] == 'a' ) input_argument = RAMA;
+		else if( some_argument[1] == 'b' ) input_argument = RAMB;
+		else if( some_argument[1] == 'c' ) input_argument = RAMC;
+		else if( some_argument[1] == 'd' ) input_argument = RAMD;
+	}
+	else //если обращение к регистру
+	{
+		if( !strcmp( some_argument, "ax" ) ) input_argument = RGAX;
+		else if( !strcmp( some_argument, "bx" ) ) input_argument = RGBX;
+		else if( !strcmp( some_argument, "cx" ) ) input_argument = RGCX;
+		else if( !strcmp( some_argument, "dx" ) ) input_argument = RGDX;
+	}
 
 	return input_argument;
 }
