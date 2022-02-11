@@ -22,10 +22,10 @@ cd cpucode_builder/
 make
 ```
 
-Run Software CPU with
+Run assembler with
 
 ```
-make run <path-to-machine-code>
+make asm <path-to-asm-code>
 ```
 
 To totally rebuild the project run
