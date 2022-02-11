@@ -1,4 +1,5 @@
 Debug/
+Build/
 code.asm
 code.txt
 cpucode
