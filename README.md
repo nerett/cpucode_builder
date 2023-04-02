@@ -1,5 +1,5 @@
 # CPUcode Builder
-This project is an implementation of assembler and disassembler (isn't done yet) for the Software CPU project. Assembler compiles asm code into machine code that can be run with the Software CPU.
+This project is an implementation of assembler and disassembler (isn't done yet) for the Software CPU project. Assembler compiles asm code into machine code that can be run with the Software CPU. This project is written in C with some handy C++ adjustments.
 
 ## Usage
 #### Assembler
@@ -39,4 +39,4 @@ make
 This section isn't done yet.
 
 ## About project
-This programm was written during MIPT **Ded's** cource.
+This program was written during MIPT **Ded's** cource.
